@@ -19,13 +19,14 @@ variable "subscription_id" {
 }
 
 variable "environment" {
-  type = string
+  type = list(string)
+  default = [ "PROD","STAGE","TEST", "DEV" ]
 }
 
 # Define prefix that will be applied to all the Azure Resources
 variable "prefix" {
   type = string
-  default = "MC_SOLR_${var.environment}_"
+  default = "VK_SOLR_${var.environment}_"
 }
 
 variable "location" {
@@ -64,7 +65,7 @@ variable "Subnet_address_range" {
 
 # Public IP and NIC Allocation method
 
-variable "alloction_method" {
+variable "allocation_method" {
   type = list(string)
   default = [ "static", "Dynamic" ]
 }
