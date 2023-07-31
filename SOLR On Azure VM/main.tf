@@ -125,3 +125,25 @@ resource "null_resource" "copy_file" {
     destination = "c:/WindowsServices/Temp"
   }
 }
+
+resource "null_resource" "run_powershell_commands" {
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+    $vmname = "${azurerm_virtual_machine.vm.name}"
+    $resourcegroupname = "${azurerm_resource_group.rg.name}"
+
+    $sourcepath = "c:/WindowsServices/Temp"
+    $destinationpath = "c:/WindowsServices/SOLR_8.8.2/"
+
+    Invoke-Command -ComputerName $vmname -ScriptBlock {
+      New-item -type Directory
+      Expand-Archive -Source $sourcepath -DestinationPath $destinationpath
+      
+    }
+    EOT
+  }
+}
